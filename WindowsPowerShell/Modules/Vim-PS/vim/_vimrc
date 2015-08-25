@@ -1,0 +1,32 @@
+"Set our backspace key to work like expected
+set nocompatible
+set backspace=indent,eol,start
+
+"Set file encoding
+set filetype=on
+set encoding=utf-8
+set fileencoding=utf-8
+set listchars=eol:$,tab:>-,trail:.,nbsp:_,extends:+,precedes:+
+
+"Set line numbers, syntax highlighting, and 
+"bracket matching
+set nu
+set cursorline
+set showmatch
+set showmode
+syntax on
+colorscheme desert
+
+if has('gui_running')
+        set background=dark
+endif
+
+"Search as we type and highlight results
+set incsearch
+set hlsearch
+
+"Tabs are now spaces
+set tabstop=4
+set softtabstop=4
+set expandtab
+

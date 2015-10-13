@@ -1,6 +1,6 @@
-Set-Alias top Get-TopProcesses
+Set-Alias -Name top -Value Get-TopProcesses
 
-function Get-TopProcesses {
+Function Get-TopProcesses {
 <#
 .SYNOPSIS
     
@@ -10,12 +10,12 @@ function Get-TopProcesses {
 
 #>
 
-    $saveY = [console]::CursorTop
-    $saveX = [console]::CursorLeft
+    Set-Variable -Name SetValX -Value $([Console]::CursorLeft)
+    Set-Variable -Name SetValY -Value $([Console]::CursorTop)
 
-    while ($true) {
-        Get-Process | Sort -Descending CPU | Select -First 30;
-        Sleep -Seconds 2;
-        [console]::setcursorposition($saveX,$saveY+3)
+    While ($true) {
+        Get-Process | Sort-Object -Descending CPU | Select-Object -First 30;
+        Start-Sleep -Seconds 2;
+        [Console]::SetCursorPosition(${SetValX},${SetValY}+3)
     }
 }

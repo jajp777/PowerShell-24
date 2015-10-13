@@ -1,6 +1,6 @@
-Set-Alias uptime Get-Uptime
+Set-Alias -Name uptime -Value Get-Uptime
 
-function Get-Uptime([String]$Computer = '.') {
+Function Get-Uptime([String]${Computer} = '.') {
 <#
 .SYNOPSIS
     
@@ -10,9 +10,9 @@ function Get-Uptime([String]$Computer = '.') {
 
 #>
 
-    $os = Get-WmiObject win32_operatingsystem
-    $uptime = (Get-Date) - ($os.ConvertToDateTime($os.lastbootuptime))
-    $Display = "Uptime: " + $Uptime.Days + " days, " + $Uptime.Hours + " hours, " + $Uptime.Minutes + " minutes"
-    Write-Output $Display
+    Set-Variable -Name OSObject -Value $(Get-WmiObject -Class Win32_OperatingSystem)
+    Set-Variable -Name Uptime -Value $((Get-Date) - (${OSObject}.ConvertToDateTime(${OSObject}.lastbootuptime)))
+    Set-Variable -Name Output -Value $("Uptime: " + ${Uptime}.Days + " days, " + ${Uptime}.Hours + " hours, " + ${Uptime}.Minutes + " minutes")
+    Write-Output -InputObject ${Output}
 
 }

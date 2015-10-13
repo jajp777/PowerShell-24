@@ -11,9 +11,6 @@ goto variable_block
 :: https://github.com/michalmillar
 :: http://www.bolis.com
 ::
-:: Exe made with Bat To Exe Converter
-:: http://www.f2ko.de/en/b2e.php
-::
 :: 
 
 :variable_block

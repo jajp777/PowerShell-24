@@ -16,13 +16,13 @@ ModuleVersion = '1.0.0.1'
 GUID = ''
 
 # Author of this module
-Author = 'Michal Millar'
+Author = 'Michael Millar'
 
 # Company or vendor of this module
 CompanyName = 'The Bolis Group, Inc.'
 
 # Copyright statement for this module
-Copyright = 'Copyright (c) 2015, Michal Millar'
+Copyright = 'Copyright (c) 2014, Michael Millar'
 
 # Description of the functionality provided by this module
 Description = 'Provides OpenSSH session creation, management and interaction from PowerShell.'
@@ -76,7 +76,7 @@ AliasesToExport = '*'
 ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('bin', 'docs', 'temp', 'usr', 'SSH-PS.psm1', 'SSH-PS.psd1')
+FileList = @('Bin', 'SSH-PS.psm1', 'SSH-PS.psd1')
 
 # Private data to pass to the module specified in ModuleToProcess
 PrivateData = ''

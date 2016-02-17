@@ -3,9 +3,9 @@
 A set of functions for dealing with SSH connections from PowerShell, using portable OpenSSH for Windows.
 
 See further information at:
-http://www.mls-software.com/opensshd.html
+https://github.com/PowerShell/Win32-OpenSSH
 
-Copyright (c) 2014, Michael Millar.
+Copyright (c) 2015, Michael Millar.
 All rights reserved.
 Author: Michael Millar
 
@@ -13,9 +13,7 @@ Author: Michael Millar
 See:
 Connect-SSHSession
 New-SSHKey
-Get-SSHKey
-Invoke-SSHAgent
-Invoke-SSHKeyScan
+Connect-SFTPSession
 #>
 
 # Resolve full path to script directory
@@ -24,12 +22,16 @@ $ScriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
 
 # Begin Function block
 
+function Connect-SSHSession {
 <#
 .SYNOPSIS
 Creates SSH sessions to remote SSH-compatible hosts, such as Linux or Unix computers or network equipment. You can later issue commands to be executed on one or more of these hosts.
 
 .DESCRIPTION
 SSH is a program for logging into a remote machine and for executing commands on a remote machine. It is intended to replace rlogin and rsh, and provide secure encrypted communications between two untrusted hosts over an insecure network. X11 connections and arbitrary TCP ports can also be forwarded over the secure channel. SSH connects and logs into the specified hostname (with optional user name). The user must prove his/her identity to the remote machine using one of several methods depending on the protocol version used. If command is specified, it is executed on the remote host instead of a login shell.
+
+.SYNTAX
+Get-SSHSession [[-1246AaCfgKkMNnqsTtVvXxYy] <user@foo>]
 
 .PARAMETER 1246AaCfgKkMNnqsTtVvXxYy
 
@@ -147,11 +149,11 @@ Optional. Disables X11 forwarding.
 -Y
 Optional. Enables trusted X11 forwarding. Trusted X11 forwardings are not subjected to the X11 SECURITY extension controls.
 #>
-function Connect-SSHSession {
     Invoke-Expression "& $ScriptDir\bin\ssh.exe $args"
 }
 New-Alias -Name ssh -value Connect-SSHSession
 
+function New-SSHKey {
 <#
 .SYNOPSIS
 Authentication key generation, management and conversion.
@@ -293,133 +295,20 @@ Optional. This option will read a private OpenSSH format file and print an OpenS
 -z serial_number
 Optional. Specifies a serial number to be embedded in the certificate to distinguish this certificate from others from the same CA. The default serial number is zero. When generating a KRL, the -z flag is used to specify a KRL version number.
 #>
-function New-SSHKey {
     Invoke-Expression "& $ScriptDir\bin\ssh-keygen.exe $args"
 }
 New-Alias -Name ssh-keygen -value New-SSHKey
 
-<#
-.SYNOPSIS
-Adds private key identities to the SSH authentication agent.
-
-.DESCRIPTION
-Adds private key identities to the SSH authentication agent. When run without arguments, it adds the files ~/.ssh/id_rsa, ~/.ssh/id_dsa, ~/.ssh/id_ecdsa, ~/.ssh/id_ed25519 and ~/.ssh/identity. After loading a private key, Get-SSHKey will try to load corresponding certificate information from the filename obtained by appending -cert.pub to the name of the private key file. Alternative file names can be given on the command line. If any file requires a passphrase, Get-SSHKey asks for the passphrase from the user. The passphrase is read from the user's tty. Get-SSHKey retries the last passphrase if multiple identity files are given. The authentication agent must be running and the SSH_AUTH_SOCK environment variable must contain the name of its socket for Get-SSHKey to work.
-
-.PARAMETER cDdekLlstXx
-
--c
-Optional. Indicates that added identities should be subject to confirmation before being used for authentication. Confirmation is performed by the SSH_ASKPASS program mentioned below. Successful confirmation is signaled by a zero exit status from the SSH_ASKPASS program, rather than text entered into the requester.
-
--D
-Optional. Deletes all identities from the agent.
-
--d
-Optional. Instead of adding identities, removes identities from the agent. If Get-SSHKey has been run without arguments, the keys for the default identities and their corresponding certificates will be removed. Otherwise, the argument list will be interpreted as a list of paths to public key files to specify keys and certificates to be removed from the agent. If no public key is found at a given path, Get-SSHKey will append .pub and retry.
-
--e pkcs11
-Optional. Remove keys provided by the PKCS#11 shared library pkcs11.
-
--k
-Optional. When loading keys into or deleting keys from the agent, process plain private keys only and skip certificates.
-
--L
-Optional. Lists public key parameters of all identities currently represented by the agent.
-
--l
-Optional. Lists fingerprints of all identities currently represented by the agent.
-
--s pkcs11
-Optional. Add keys provided by the PKCS#11 shared library pkcs11.
-
--t life
-Optional. Set a maximum lifetime when adding identities to an agent. The lifetime may be specified in seconds or in a time format specified in the sshd_config.
-
--X
-Optional. Unlock the agent.
-
--x
-Optional. Lock the agent with a password. 
-#>
-function Get-SSHKey {
-    Invoke-Expression "& $ScriptDir\bin\ssh-add.exe $args"
+function Connect-SFTPSession {
+    Invoke-Expression "& $ScriptDir\bin\sftp.exe $args"
 }
-New-Alias -Name ssh-add -value Get-SSHKey
-
-<#
-.SYNOPSIS
-The SSH authentication agent.
-
-.DESCRIPTION
-A program to hold private keys used for public key authentication (RSA, DSA, ECDSA, ED25519). Invoke-SSHAgent is usually started in the beginning of an X-session or a login session, and all other windows or programs are started as clients to the Invoke-SSHAgent program. Through use of environment variables the agent can be located and automatically used for authentication when logging in to other machines using SSH. The agent initially does not have any private keys. Keys are added using Get-SSHKey. Multiple identities may be stored in Invoke-SSHAgent concurrently and SSH will automatically use them if present. Get-SSHKey is also used to remove keys from Invoke-SSHAgent and to query the keys that are held in one.
-
-.PARAMETER acdkst
-
--a bind_address
-Optional. Bind the agent to the UNIX-domain socket bind_address. The default is $TMPDIR/ssh-XXXXXXXXXX/agent.<ppid>.
-
--c
-Optional. Generate C-shell commands on stdout. This is the default if SHELL looks like it's a csh style of shell.
-
--d
-Optional. Debug mode. When this option is specified Invoke-SSHAgent will not fork.
-
--k
-Optional. Kill the current agent (given by the SSH_AGENT_PID environment variable).
-
--s
-Optional. Generate Bourne shell commands on stdout. This is the default if SHELL does not look like it's a csh style of shell.
-
--t life
-Optional. Set a default value for the maximum lifetime of identities added to the agent. The lifetime may be specified in seconds or in a time format specified in the sshd_config. A lifetime specified for an identity with Get-SSHKey overrides this value. Without this option the default maximum lifetime is forever. 
-#>
-function Invoke-SSHAgent {
-    Invoke-Expression "& $ScriptDir\bin\ssh-agent.exe $args"
-}
-New-Alias -Name ssh-agent -value Invoke-SSHAgent
-
-<#
-.SYNOPSIS
-Gather SSH public keys.
-
-.DESCRIPTION
-A utility for gathering the public SSH host keys of a number of hosts. It was designed to aid in building and verifying ssh_known_hosts files. Invoke-SSHKeyScan provides a minimal interface suitable for use by shell and perl scripts. It uses non-blocking socket I/O to contact as many hosts as possible in parallel, so it is very efficient. The keys from a domain of 1,000 hosts can be collected in tens of seconds, even when some of those hosts are down or do not run SSH. For scanning, one does not need login access to the machines that are being scanned, nor does the scanning process involve any encryption.
-
-.PARAMETER 46fHpTtv
-
--4
-Optional. Forces Invoke-SSHKeyScan to use IPv4 addresses only.
-
--6
-Optional. Forces Invoke-SSHKeyScan to use IPv6 addresses only.
-
--f file
-Optional. Read hosts or “addrlist namelist” pairs from file, one per line. If - is supplied instead of a filename, Invoke-SSHKeyScan will read hosts or “addrlist namelist” pairs from the standard input.
-
--H
-Optional. Hash all hostnames and addresses in the output. Hashed names may be used normally by SSH and SSHd, but they do not reveal identifying information should the file's contents be disclosed.
-
--p port
-Optional. Port to connect to on the remote host.
-
--T timeout
-Optional. Set the timeout for connection attempts. If timeout seconds have elapsed since a connection was initiated to a host or since the last time anything was read from that host, then the connection is closed and the host in question considered unavailable.
-
--t type
-Optional. Specifies the type of the key to fetch from the scanned hosts. The possible values are “rsa1” for protocol version 1 and “dsa”, “ecdsa”, “ed25519”, or “rsa” for protocol version 2. Multiple values may be specified by separating them with commas. The default is to fetch “rsa”, “ecdsa”, and “ed25519” keys.
-
--v
-Optional. Verbose mode. Causes Invoke-SSHKeyScan to print debugging messages about its progress. 
-#>
-function Invoke-SSHKeyScan {
-    Invoke-Expression "& $ScriptDir\bin\ssh-keyscan.exe $args"
-}
-New-Alias -Name ssh-keyscan -value Invoke-SSHKeyScan
+New-Alias -Name sftp -value Connect-SFTPSession
 
 ######## END OF FUNCTIONS ########
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$global:OpenSSH = @{}
+${global:SSH-PS} = @{}
 
-Export-ModuleMember -Alias ssh, ssh-keygen, ssh-add, ssh-agent, ssh-keyscan -Function Connect-SSHSession, Get-SSHKey, Invoke-SSHAgent, New-SSHKey, Invoke-SSHKeyScan
+Export-ModuleMember -Alias ssh, ssh-keygen, sftp -Function Connect-SSHSession, New-SSHKey, Connect-SFTPSession

@@ -1,0 +1,83 @@
+"" Customized Vimrc Script
+
+" Name - Vimrc
+" Version - 1.3
+" Date - 2015-12-09
+" Author - Michal Millar
+" https://github.com/michalmillar
+" http://www.bolis.com
+"
+" Description - 
+" Custom settings to be loaded at runtime for vim
+"
+
+"" General functionality
+
+" Redraw the window only when necessary
+set lazyredraw
+
+" Break into a new line with the last word at or before column 80
+"set textwidth=80
+
+" Auto indent the next line, if applicable
+set autoindent
+
+" Create backup and swap directories
+" Still figuring this one out
+"if !isdirectory("~/.vim")
+"    call mkdir("~/.vim", "p")
+"    if !isdirectory("~/.vim/swap")
+"        call mkdir("~/.vim/swap", "p")
+"    endif
+"    if !isdirectory("~/.vim/backup")
+"        call mkdir("~/.vim/backup", "p")
+"    endif
+"    if !isdirectory("~/.vim/undo")
+"        call mkdir("~/.vim/undo", "p")
+"    endif
+"endif
+
+" Set backup and swap directories
+"set backup
+"set directory=$HOME\_vimfiles\swap\\
+"set backupdir=$HOME\_vimfiles\backup\\
+"set undodir=$HOME\_vimfiles\undo\\
+
+" Disable system bells on error
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+" Set the backspace key to function like modern text editors
+set nocompatible
+set backspace=indent,eol,start
+set whichwrap+=<,>,h,l
+
+" Set file encoding to unix standard
+set filetype=on
+set encoding=utf8
+set fileencoding=utf8
+set listchars=eol:$,tab:>-,trail:.,nbsp:_,extends:+,precedes:+
+set fileformat=unix
+
+" Set line numbers, bracket matching, and column counting
+set nu
+set ruler
+set cursorline
+set showmatch
+set showmode
+
+" Coloring Format
+syntax enable
+colorscheme default
+set background=dark
+
+" Search as we type and highlight results
+set incsearch
+set hlsearch
+
+" Treat a tab insert as four space inserts
+set tabstop=4
+set softtabstop=4
+set expandtab

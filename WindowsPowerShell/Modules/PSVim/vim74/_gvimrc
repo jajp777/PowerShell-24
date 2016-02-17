@@ -1,0 +1,9 @@
+" Set the line highlight background
+hi cursorline guibg=darkmagenta
+" Set the initial size of the window
+set lines=50 columns=84
+" Prevent display of the toolbar
+set guioptions-=T
+" Prevent display of any scrollbars
+set guioptions-=r
+set guioptions-=L
